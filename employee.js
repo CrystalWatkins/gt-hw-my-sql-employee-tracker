@@ -22,39 +22,57 @@ connection.connect(function (err) {
     init();
 });
 
+
+
 function init() {
-    prompt([
+    inquirer
+    .prompt([
         {
             type: "list",
             choices: [
-                "Band",
+                "View All Employees",
+                "View All Employees By Department",
+                "View All Employees By Manager",
+                "Add Employee",
+                "Remove Employee",
+                "Update Employee Role",
+                "Update Employee Manager",
+                "View All Roles",
                 "exit",
             ],
             name: "action",
-            message: "What Band do you want to search for?"
+            message: "What Would You Like To Do?",
         }
     ]).then(({action}) =>{
-        if(action === "Band") {
-            searchByBand();
+        if(action === "View All Employees") {
+            viewEmployees();
+        } else if (action === "View All Employees By Department") {
+            viewDepartment ();
+        } else if (action === "View Employees By Manager") {
+            viewManager ();
+        } else if (action === "Add Employee") {
+            addEmployee ();
+        } else if (action === "Remove Employee") {
+            removeEmployee ();
+        } else if (action === "Update Employee Role") {
+            updateRole ();
+        }else if (action === "Update Employee Manager") {
+            updateManager();
+        } else if (action === "View All Roles") {
+            viewRoles ();
         } else {
             exit();
         }
-    })
-}
-
-function searchByBand() {
-    inquirer.prompt([
-        {
-        type: "input",
-        message: "What band would you like ot search for?",
-        name: "band"
-    },
-]).then(({band}) => {
-    const queryString = "SELECT top5000.position, top5000.artist, top5000.song, top5000.year, top_albums.album FROM top5000 INNER JOIN top_albums ON (top5000.artist = top_albums.artist AND top5000.year = top_albums.year);";
-    connection.query(queryString,["band"], function(err, data) {
-        if (err) throw err;
-        console.table(data);
-        init()
-    })   
-})
+    });
 };
+
+
+    // viewEmployees();
+    // viewDepartment ();
+    // viewManager ();
+    // addEmployee ();
+    // removeEmployee ();
+    // updateRole ();
+    // updateManager();
+    // viewRoles ();
+    // exit();
