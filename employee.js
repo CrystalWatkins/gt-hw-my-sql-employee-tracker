@@ -1,5 +1,7 @@
 const mysql = require("mysql"); 
 const inquirer = require("inquirer");
+const chalk = require("chalk");
+const boxen = require("boxen");
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
@@ -19,10 +21,24 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if(err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
-    init();
+    displaySign();
 });
 
-
+function displaySign() {
+    const greeting = chalk.white.bold("EMPLOYEE TRACKER");
+    
+    const boxenOptions = {
+     padding: 1,
+     margin: 1,
+     borderStyle: "round",
+     borderColor: "blue",
+     backgroundColor: "#555555",
+    };
+    const msgBox = boxen( greeting, boxenOptions );
+    
+    console.log(msgBox);
+    init();
+};
 
 function init() {
     inquirer
