@@ -52,8 +52,9 @@ function init() {
                 "Add Employee",
                 "Remove Employee",
                 "Update Employee Role",
-                "Update Employee Manager",
                 "View All Roles",
+                "Add Department",
+                "Add Role",
                 "exit",
             ],
             name: "action",
@@ -72,10 +73,12 @@ function init() {
             removeEmployee ();
         } else if (action === "Update Employee Role") {
             updateRole ();
-        }else if (action === "Update Employee Manager") {
-            updateManager();
         } else if (action === "View All Roles") {
             viewRoles ();
+        } else if (action === "Add Department") {
+            addDepartment ();
+        } else if (action === "Add Role") {
+            addRole ();
         } else {
             console.log("You have exited the employee tracker!")
             exit();
@@ -84,17 +87,23 @@ function init() {
 };
 
     const viewEmployees = () => {
-        var query = "SELECT employee.id, employee.first_name, employee.last_name, department.department_name, role.salary, manager.first_name AS manager_first, manager.last_name AS manager_last FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id";
+        var query = `SELECT employee.first_name, employee.last_name, role.title,
+        department.department_name, role.salary, manager.first_name AS manager_first,
+        manager.last_name AS manager_last FROM employee LEFT JOIN role ON employee.role_id 
+        = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee
+        manager ON manager.id = employee.manager_id;`
         connection.query(query, function(err, results) {
             for (var i = 0; i < results.length; i++) {
             }  if(err) throw err;
             console.table(results);
+            init();
+        })
+    };
 
-            init();
-        })
-    };
     const viewDepartment = () => {
-        var query = "SELECT department.id, department.department_name, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id";
+        var query = `SELECT department.id, department.department_name, employee.first_name, 
+        employee.last_name, role.title FROM employee LEFT JOIN role ON employee.role_id = 
+        role.id LEFT JOIN department ON department.id = role.department_id`;
         connection.query(query, function(err, results) {
             for (var i = 0; i < results.length; i++) {
             }  if(err) throw err;
@@ -102,97 +111,137 @@ function init() {
             init();
         })
     };
+
     const viewManager = () => {
-        var query = "SELECT employee.id, employee.first_name, employee.last_name, role.title, department.department_name, employee.manager_id, manager.first_name AS manager_first, manager.last_name AS manager_last FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id LEFT JOIN employee manager ON manager.id = employee.manager_id;";
+        var query =`SELECT employee.id, employee.first_name, employee.last_name, 
+        role.title, department.department_name, employee.manager_id, manager.first_name 
+        AS manager_first, manager.last_name AS manager_last FROM employee LEFT JOIN role 
+        ON employee.role_id = role.id LEFT JOIN department ON role.department_id = 
+        department.id LEFT JOIN employee manager ON manager.id = employee.manager_id`
         connection.query(query, function(err, results) {
             for (var i = 0; i < results.length; i++) {
             }  if(err) throw err;
             console.table(results);
             init();
         })
-    };
+    }
+   
     const addEmployee = () => {
         connection.query("SELECT * FROM role", (err, data) => {
-            if (err) throw err; 
-            const arrayOfTitles = data.map((object) => object.name);
-            inquirer
+          if (err) throw err;
+          // console.log(data);
+          const arrayOfTitles = data.map((object) => {
+            return { name: object.title, value: object.id };
+          });
+          connection.query("SELECT * FROM employee", (err, data) => {
+            if (err) throw err;
+            // console.log(data);
+            const arrayOfManagers = data.map((managers) => {
+              return { name: managers.first_name, value: managers.id };
+            });
+          // console.log(arrayOfTitles);
+          inquirer
             .prompt([
-                {
-                    type: "input",
-                    message: "What is your new Employees first name?",
-                    name: "firstName",
-                },
-                {
-                    type: "input",
-                    message: "What is your new Employees last name?",
-                    name: "lastName",
-                },
-                {
-                    type: "list",
-                    message: "Please pick the employee title",
-                    choices: arrayOfTitles,
-                    name: "title",
-                }
+              {
+                type: "input",
+                message: "What is your new employee's first name?",
+                name: "first_name",
+              },
+              {
+                type: "input",
+                message: "What is your new employee's last name?",
+                name: "last_name",
+              },
+              {
+                type: "list",
+                message: "Please select the employee's job role:",
+                choices: arrayOfTitles,
+                name: "role_id",
+              },
+              {
+                type: "list",
+                message: "Please select the employee's manager:",
+                choices: arrayOfManagers,
+                name: "manager_id",
+              },
             ])
             .then((response) => {
-                console.log(response);
-                const newEmployeeObject = data.filter(
-                    (object) => newEmployeeObject.employeeFirstName === newEmployeeObject.title)
-                console.log(newEmployeeObject)
+              // console.log(response);
+              connection.query("INSERT INTO employee SET ?", response, (err, res) => {
+                if (err) throw err;
+                connection.query("SELECT * FROM employee", (err, res) => {
+                  if (err) throw err;
+                  console.table(res);
+                  init();
+                });    
+              });
             });
+          });
         });
-    };
+      };
 
     const removeEmployee = () => {
         connection.query("SELECT * FROM employee", function(err, results){
           if (err) throw err;
         inquirer
           .prompt({
-            name: "removeEmployee",
+            name: "id",
             type: "list",
             message: "Who would you like to remove?",
             choices: function() {var choicesArray = [];
               for (var i = 0; i < results.length; i++) {
-                choicesArray.push(results[i].first_name);
+                  const Obj = {
+                      name: `${results[i].first_name} ${results[i].last_name}`, 
+                      value: results[i].id,
+                  }
+                choicesArray.push(Obj);
               }
               return choicesArray;
             }
           })
-          .then(function ({ answer }) {
-              const query = "DELETE * FROM employee WHERE employee.first_name = ?"
-            connection.query(query, { employee: answer.employee }, function(err, results){
-            if (err) throw err
-            console.table(results);
-            console.log(`You deleted ${employee.first_name}`)
+          .then(function ({id}) {
+              const query = "DELETE FROM employee WHERE id = ?"
+            connection.query(query, id, function(err, results){
+            if (err) throw err;
+             connection.query("SELECT * FROM employee", (err, res) => {
+                if (err) throw err;
+                console.log("Your delete was successful");
+                console.table(res);
+            init();
             })
           })
         });
-        init();
+    });
     };
 
     const updateRole = () => {
+       console.log("help")
+        // HAVE TO make the roles the ID
         // select employee
         //another query inside this callback
         // query which you're calling another query
         // go through which roles
         // async await
         // second query inside the callback of the first query
-        // 
-        console.log("yea")
-        init();
     };
-    const updateManager = () => {
-        console.log("here")
-        init();
-    };
+    
     const viewRoles = () => {
-        var query = "SELECT role.title, role.salary, role.department_id, department.department_name FROM role LEFT JOIN department ON role.department_id = department.id;";
+        var query = `SELECT role.title, role.salary, role.department_id, 
+        department.department_name FROM role LEFT JOIN department ON role.department_id = department.id`
         connection.query(query, function(err, results) {
             for (var i = 0; i < results.length; i++) {
             }  if(err) throw err;
             console.table(results);
             init();
         })
+    };
+
+    const addDepartment = () => {
+        console.log("added department")
+    };
+
+    const addRole = () => {
+        console.log("added role")
     };
 
     const exit = () => {
