@@ -214,36 +214,53 @@ function init() {
     });
     };
 
+
     const updateRole = () => {
-        connection.query("SELECT * FROM employee", function(err, results){
+        connection.query("SELECT * FROM role", (err, data) => {
+          if (err) throw err;
+          // console.log(data);
+          const arrayOfTitles = data.map((object) => {
+            return { name: object.title, value: object.title };
+          });
+          connection.query("SELECT * FROM employee", (err, data) => {
             if (err) throw err;
-          inquirer
-            .prompt({
-              name: "id",
-              type: "list",
-              message: "Who would you like to remove?",
-              choices: function() {var choicesArray = [];
-                for (var i = 0; i < results.length; i++) {
-                    const Obj = {
-                        name: `${results[i].first_name} ${results[i].last_name}`, 
-                        value: results[i].id,
-                    }
-                  choicesArray.push(Obj);
-                }
-                return choicesArray;
-              }
+            // console.log(data);
+            const arrayOfEmployees = data.map((managers) => {
+              return { name: managers.first_name, value: managers.first_name };
+            });
+            // console.log(arrayOfTitles);
+            inquirer
+              .prompt([
+                {
+                  type: "list",
+                  message: "Please select the employee you would like to update?",
+                  choices: arrayOfEmployees,
+                  name: "manager_id",
+                },
+                {
+                  type: "list",
+                  message: "Please select the employee's job role:",
+                  choices: arrayOfTitles,
+                  name: "role_id",
+                },
+              ])
+              .then((response) => {
+                console.log(response);
+                connection.query("UPDATE employee SET manager_id = ? WHERE employee.role_id = ?;", [manager_id, role_id], (err) => {
+                if (err) throw err;
+                connection.query(`SELECT employee.first_name, employee.last_name, role.title From employee LEFT Join role ON 
+                employee.role_id = role.id;`, (err, res) => {
+                if (err) throw err;
+                console.table(res);
+                init();
+              });
             })
+        })
+          });
+        });
+      };
+    
 
-
-       console.log("help")
-        // HAVE TO make the roles the ID
-        // select employee
-        //another query inside this callback
-        // query which you're calling another query
-        // go through which roles
-        // async await
-        // second query inside the callback of the first query
-    };
     
     const viewRoles = () => {
         var query = `SELECT role.title, role.salary, role.department_id, 
