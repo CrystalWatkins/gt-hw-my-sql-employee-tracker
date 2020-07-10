@@ -55,9 +55,9 @@ LEFT JOIN employee manager ON manager.id = employee.manager_id;
 
 -- Employees by Department
 SELECT department.id, department.department_name, employee.first_name, employee.last_name, role.title 
-FROM department
-LEFT JOIN employee ON department.id = employee.role_id
-LEFT JOIN role ON department.id = role.department_id;
+FROM employee
+LEFT JOIN role ON employee.role_id = role.id
+LEFT JOIN department ON department.id = role.department_id;
 
 -- View All Roles
 SELECT role.title, role.salary, role.department_id, department.department_name FROM role

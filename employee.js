@@ -94,7 +94,7 @@ function init() {
         })
     };
     const viewDepartment = () => {
-        var query = "SELECT department.id, department.department_name, employee.first_name, employee.last_name, role.title FROM department LEFT JOIN employee ON department.id = employee.role_id LEFT JOIN role ON department.id = role.department_id";
+        var query = "SELECT department.id, department.department_name, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON department.id = role.department_id";
         connection.query(query, function(err, results) {
             for (var i = 0; i < results.length; i++) {
             }  if(err) throw err;
@@ -136,9 +136,9 @@ function init() {
             ])
             .then((response) => {
                 console.log(response);
-                const rankObject = data.filter(
-                    (object) => object.name === response.title)
-                console.log(rankObject)
+                const newEmployeeObject = data.filter(
+                    (object) => newEmployeeObject.employeeFirstName === newEmployeeObject.title)
+                console.log(newEmployeeObject)
             });
         });
     };
@@ -148,7 +148,7 @@ function init() {
           if (err) throw err;
         inquirer
           .prompt({
-            name: "employee",
+            name: "removeEmployee",
             type: "list",
             message: "Who would you like to remove?",
             choices: function() {var choicesArray = [];
@@ -171,6 +171,13 @@ function init() {
     };
 
     const updateRole = () => {
+        // select employee
+        //another query inside this callback
+        // query which you're calling another query
+        // go through which roles
+        // async await
+        // second query inside the callback of the first query
+        // 
         console.log("yea")
         init();
     };
