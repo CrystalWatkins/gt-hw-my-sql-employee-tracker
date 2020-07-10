@@ -215,6 +215,26 @@ function init() {
     };
 
     const updateRole = () => {
+        connection.query("SELECT * FROM employee", function(err, results){
+            if (err) throw err;
+          inquirer
+            .prompt({
+              name: "id",
+              type: "list",
+              message: "Who would you like to remove?",
+              choices: function() {var choicesArray = [];
+                for (var i = 0; i < results.length; i++) {
+                    const Obj = {
+                        name: `${results[i].first_name} ${results[i].last_name}`, 
+                        value: results[i].id,
+                    }
+                  choicesArray.push(Obj);
+                }
+                return choicesArray;
+              }
+            })
+
+
        console.log("help")
         // HAVE TO make the roles the ID
         // select employee
@@ -237,12 +257,48 @@ function init() {
     };
 
     const addDepartment = () => {
-        console.log("added department")
-    };
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              message: "What is your new department's name",
+              name: "department_name",
+            },
+          ])
+          .then((response) => {
+            console.log(response);
+            connection.query("INSERT INTO department SET ?", response, (err, res) => {
+              if (err) throw err;
+              connection.query("SELECT * FROM department", (err, res) => {
+                if (err) throw err;
+                console.table(res);
+                init();
+              });
+            });
+          });
+      };
 
     const addRole = () => {
-        console.log("added role")
-    };
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              message: "What Role Do you want to Add to the Company?",
+              name: "title",
+            },
+          ])
+          .then((response) => {
+            console.log(response);
+            connection.query("INSERT INTO role SET ?", response, (err) => {
+              if (err) throw err;
+              connection.query("SELECT * FROM role", (err, res) => {
+                if (err) throw err;
+                console.table(res);
+                init();
+              });
+            });
+          });
+      };
 
     const exit = () => {
         connection.end();

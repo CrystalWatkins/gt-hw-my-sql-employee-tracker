@@ -11,8 +11,8 @@ CREATE TABLE department(
 CREATE TABLE role (
   id INTEGER NOT NULL auto_increment PRIMARY KEY,
   title VARCHAR(30),
-  salary DECIMAL (10,2),
-  department_id INTEGER,
+  salary DECIMAL (10,2) DEFAULT (50000.00),
+  department_id INTEGER DEFAULT (1),
   FOREIGN KEY (department_id) REFERENCES department(id)
 );
 
@@ -30,11 +30,11 @@ CREATE TABLE employee (
 INSERT into department (department_name) VALUES ("Sales"), ("Engineer"), ("Finance"), ("Legal");
 INSERT into role (title, salary, department_id) VALUES ("Sales Manager", 100000, 1), ("Sales person", 50000, 1),
 ("Lead Enginneer", 100000, 2),("Junior Engineer", 900000, 2), ("Accountant", 100000, 3),
-("Legal Team Employee", 30000, 4), (title, salary, department_id) VALUES ("Lawyer", 30000, 4);
+("Legal Team Employee", 30000, 4), ("Lawyer", 30000, 4);
 INSERT into employee (first_name, last_name, role_id, manager_id) VALUES ("John", "Doe", 1, 2),
-("Mary Kate", "Olsen", 1, 3),("Ashley", "Olsen", 2, 4),("Michael", "Scott", 1, null), ("Jim", "Halpert", 3, 1),
-("Ron", "Swanson", 2, null), ("Leslie", "Knope", 4, 2), ("Phoebe", "Buffet", 3, null),("Rachel", "Green", 1, 3),
-("Monica", "Geller", 2, 4),("Ross", "Geller", 3, 1),("Chandler", "Bing", 4, 2), ("Andy", "Dwyer", 4, null);
+("Mary Kate", "Olsen", 3, 3),("Ashley", "Olsen", 2, 4),("Michael", "Scott", 5, null), ("Jim", "Halpert", 4, 1),
+("Ron", "Swanson", 6, null), ("Leslie", "Knope", 7, 2), ("Phoebe", "Buffet", 3, null),("Rachel", "Green", 1, 3),
+("Monica", "Geller", 2, 4),("Ross", "Geller", 5, 1),("Chandler", "Bing", 6, 2), ("Andy", "Dwyer", 7, null);
 
 SELECT * FROM department;
 SELECT * FROM role;
