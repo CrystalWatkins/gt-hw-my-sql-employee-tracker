@@ -112,21 +112,64 @@ function init() {
         })
     };
     const addEmployee = () => {
-        console.log("hi")
-        init();
+        connection.query("SELECT * FROM role", (err, data) => {
+            if (err) throw err; 
+            const arrayOfTitles = data.map((object) => object.name);
+            inquirer
+            .prompt([
+                {
+                    type: "input",
+                    message: "What is your new Employees first name?",
+                    name: "firstName",
+                },
+                {
+                    type: "input",
+                    message: "What is your new Employees last name?",
+                    name: "lastName",
+                },
+                {
+                    type: "list",
+                    message: "Please pick the employee title",
+                    choices: arrayOfTitles,
+                    name: "title",
+                }
+            ])
+            .then((response) => {
+                console.log(response);
+                const rankObject = data.filter(
+                    (object) => object.name === response.title)
+                console.log(rankObject)
+            });
+        });
     };
-    const removeEmployee = () => {
-        inquirer
-        .prompt({
-            name: "",
-            type: "input",
-            message: "",
-        }).then(function(answer) {
-            var query = "DELETE FROM first_name WHERE condition;"
-        })
 
+    const removeEmployee = () => {
+        connection.query("SELECT * FROM employee", function(err, results){
+          if (err) throw err;
+        inquirer
+          .prompt({
+            name: "employee",
+            type: "list",
+            message: "Who would you like to remove?",
+            choices: function() {var choicesArray = [];
+              for (var i = 0; i < results.length; i++) {
+                choicesArray.push(results[i].first_name);
+              }
+              return choicesArray;
+            }
+          })
+          .then(function ({ answer }) {
+              const query = "DELETE * FROM employee WHERE employee.first_name = ?"
+            connection.query(query, { employee: answer.employee }, function(err, results){
+            if (err) throw err
+            console.table(results);
+            console.log(`You deleted ${employee.first_name}`)
+            })
+          })
+        });
         init();
     };
+
     const updateRole = () => {
         console.log("yea")
         init();
