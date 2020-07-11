@@ -1,7 +1,7 @@
 # gt-hw-my-sql-employee-tracker
 ## Description 
 
-This is a homework requirement for GT Full Stack Flex Program. This SQL webpage is designed to create an employee database that combines three different tables to be manipulated and changed by the user for the specific needs. You can assign managers, get information about specific employees, and delete employee information. 
+This is a homework requirement for GT Full Stack Flex Program. This mySQL webpage is designed to create an employee database that combines three different tables to be manipulated and changed by the user for the specific needs of a company. You can assign an employee to a different department, get information about specific data within your company, add different aspects to the company and delete employee information. 
 
 
 ## Table of Contents
@@ -17,22 +17,24 @@ This is a homework requirement for GT Full Stack Flex Program. This SQL webpage 
 
 ## Installation
 
-* --------
-* --------
+* Copy EmployeeSchema.sql in your local mySQL workbench and query the database
+* In the github repo link, clone the repo and install on your local VS code
+* Run npm install from package.json
+* Run node employee.js and follow the prompts
 
 
-[Link to Github Repo](#)
+[Link to Github Repo](https://crystalwatkins.github.io/gt-hw-my-sql-employee-tracker/.)
  
-[Link to Heroku Website](#)
+[Link to Video Website](#)
 
 
 ## Usage 
 
 This Javascript file uses best practices for Node Express.
 
-[Link to Github Repo](#).
+[Link to Github Repo](https://crystalwatkins.github.io/gt-hw-my-sql-employee-tracker/.).
  
-[Link to Heroku Website](#).
+[Link to Video Website](#).
 
 ![Photo 1](public/assets/pictures/home.png)
 ![Photo 2](public/assets/pictures/notes.png)
