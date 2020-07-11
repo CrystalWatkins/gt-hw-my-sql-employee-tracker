@@ -25,7 +25,7 @@ This is a homework requirement for GT Full Stack Flex Program. This mySQL webpag
 
 [Link to Github Repo](https://crystalwatkins.github.io/gt-hw-my-sql-employee-tracker/.)
  
-[Link to Video Website](#)
+[Link to Video Website](https://drive.google.com/file/d/1Xy5LKlEEk7d3nxKSND_KHRTo8ax-7uxZ/view)
 
 
 ## Usage 
@@ -34,10 +34,10 @@ This Javascript file uses best practices for Node Express.
 
 [Link to Github Repo](https://crystalwatkins.github.io/gt-hw-my-sql-employee-tracker/.).
  
-[Link to Video Website](#).
+[Link to Video Website](https://drive.google.com/file/d/1Xy5LKlEEk7d3nxKSND_KHRTo8ax-7uxZ/view).
 
-![Photo 1](public/assets/pictures/home.png)
-![Photo 2](public/assets/pictures/notes.png)
+![Photo 1](terminal.png)
+![Photo 2](terminal2.png)
 
 ## Credits
 
